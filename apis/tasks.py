@@ -11,7 +11,7 @@
 # # # from celery import shared_task
 # # # from django.utils import timezone
 
-# # # genai.configure(api_key="AIzaSyCvKJkmaRe-mSDEiz-biZS-xT2jkjGY9RU")
+# # # genai.configure(api_key="YOUR_API_KEY")
 # # # model = genai.GenerativeModel('gemini-pro')
 
 # # # @shared_task
