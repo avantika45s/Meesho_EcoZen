@@ -7,7 +7,6 @@
 
 # # # import json
 # # # import google.generativeai as genai 
-# # # from desis_project import celery
 # # # from celery import shared_task
 # # # from django.utils import timezone
 
