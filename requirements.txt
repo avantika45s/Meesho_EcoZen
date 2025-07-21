@@ -2,11 +2,16 @@ cryptography
 google-generativeai
 djangorestframework
 django_celery_beat
+django-cors-headers
 pymysql
 django
 transformers
 jwt
-sklearn
+scikit-learn
 bs4
 pandas
 lxml
+grpcio
+openai
+django-redis
+gunicorn
