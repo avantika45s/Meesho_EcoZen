@@ -1,6 +1,6 @@
 class SustainaBuyPopup {
     constructor() {
-        this.apiKey = 'AIzaSyDuWUCV2xaDNhdoDIHAR07_MVJz01_cIWM';
+        this.apiKey = 'YOUR_GEMINI_API';
         this.currentProduct = null;
         this.init();
     }
