@@ -56,7 +56,7 @@ A “Find My Size” tool that uses your selfie to suggest perfectly fitting clo
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/avantika45s/Ecozenn.git
+   git clone https://github.com/avantika45s/Meesho_EcoZen.git
 
    ```
 2. **Install All the dependencies**
@@ -99,7 +99,7 @@ A “Find My Size” tool that uses your selfie to suggest perfectly fitting clo
     If you're using MySQL and MySQL Workbench, update the DATABASES configuration in EcoZen/settings.py with your MySQL Workbench credentials.
     Alternatively, you can use SQLite within your WSL environment or any command-line interface.
 
-    Also, make sure to add your own API keys for services like OpenAI, Gemini, and RapidAPI where required in the project.
+    Also, make sure to add your own API keys for services like OpenAI, Gemini, and RapidAPI and replace them with you API.
 
 
 5. **Load the extension**
@@ -145,9 +145,9 @@ A “Find My Size” tool that uses your selfie to suggest perfectly fitting clo
 
        You’ll be prompted to sign in with your GitHub or Microsoft account.
 
-       Once signed in, go to the Ports panel in VS Code (usually in the bottom panel or via the Command Palette: Ports: Focus on Ports View).
+       Once signed in, go to the Ports panel in VS Code (usually in the bottom panel).
 
-       Add the port your Django server is running on (default is 8000).
+       Click "Forward a Port" and add the port your Django server is running on (default is 8000).
 
        After adding the port, you’ll see a public HTTPS link next to it — that is your Dev Tunnel URL.
 
