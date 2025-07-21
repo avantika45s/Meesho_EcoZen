@@ -1,6 +1,6 @@
 class EcoScoreAnalyzer {
     constructor() {
-        this.apiKey = 'AIzaSyCjUbiswm7dlzYCsSJk6lc6MlflRp3jGAQ';
+        this.apiKey = 'YOUR_GEMINI_API';
         this.currentProduct = null;
         this.init();
     }
