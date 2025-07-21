@@ -1,0 +1,508 @@
+<!-- templates/signup.html -->
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EcoZen - Create Account</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'finovate-theme.css' %}">
+    <style>
+        .auth-container {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        .auth-card {
+            width: 100%;
+            max-width: 500px;
+            background: linear-gradient(135deg, 
+                rgba(15, 28, 77, 0.9) 0%, 
+                rgba(30, 42, 66, 0.9) 100%);
+            border-radius: 20px;
+            padding: 40px;
+            backdrop-filter: blur(20px);
+            border: 2px solid rgba(76, 175, 80, 0.3);
+            box-shadow: 
+                0 20px 40px rgba(0, 0, 0, 0.4),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+        }
+        
+        .auth-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .auth-header h2 {
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: #FFA500;
+            margin-bottom: 8px;
+            text-shadow: 0 3px 15px rgba(255, 165, 0, 0.3);
+        }
+        
+        .auth-header p {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 15px;
+            font-weight: 500;
+        }
+        
+        .logo {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #4caf50 0%, #66bb6a 100%);
+            border-radius: 50%;
+            margin: 0 auto 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            color: white;
+            box-shadow: 0 8px 25px rgba(76, 175, 80, 0.4);
+        }
+        
+        .form-group {
+            position: relative;
+            margin-bottom: 25px;
+        }
+        
+        .form-group .fa {
+            position: absolute;
+            left: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #4caf50;
+            font-size: 16px;
+            z-index: 1;
+        }
+        
+        .form-control.with-icon {
+            padding-left: 50px;
+            color: #fff;
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(76, 175, 80, 0.3);
+            border-radius: 12px;
+            padding: 16px 20px 16px 50px;
+            font-size: 15px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        
+        .form-row {
+            display: flex;
+            gap: 15px;
+        }
+        
+        .form-row .form-group {
+            flex: 1;
+        }
+        
+        .password-requirements {
+            margin-top: 8px;
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.6);
+        }
+        
+        .password-requirements ul {
+            margin: 8px 0;
+            padding-left: 20px;
+        }
+        
+        .password-requirements li {
+            margin: 4px 0;
+            transition: color 0.3s ease;
+        }
+        
+        .password-requirements li.valid {
+            color: #4caf50;
+        }
+        
+        .password-requirements li.invalid {
+            color: #ff6b6b;
+        }
+        
+        .terms-checkbox {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            margin-bottom: 25px;
+            font-size: 13px;
+        }
+        
+        .terms-checkbox input[type="checkbox"] {
+            width: auto;
+            margin: 0;
+            accent-color: #4caf50;
+        }
+        
+        .terms-checkbox label {
+            color: rgba(255, 255, 255, 0.8);
+            font-weight: 400;
+            margin: 0;
+            line-height: 1.4;
+        }
+        
+        .terms-checkbox a {
+            color: #ff9800;
+            text-decoration: none;
+        }
+        
+        .terms-checkbox a:hover {
+            text-decoration: underline;
+        }
+        
+        .auth-footer {
+            text-align: center;
+            margin-top: 30px;
+            padding-top: 25px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .auth-footer p {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 14px;
+            margin-bottom: 15px;
+        }
+        
+        .auth-footer a {
+            color: #4caf50;
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s ease;
+        }
+        
+        .auth-footer a:hover {
+            color: #66bb6a;
+            text-decoration: underline;
+        }
+        
+        .btn-signup {
+            width: 100%;
+            margin: 0;
+            padding: 16px;
+            font-size: 16px;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+        
+        .progress-steps {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 30px;
+            gap: 15px;
+        }
+        
+        .step {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.6);
+            transition: all 0.3s ease;
+        }
+        
+        .step.active {
+            background: linear-gradient(135deg, #4caf50 0%, #66bb6a 100%);
+            color: white;
+            box-shadow: 0 4px 15px rgba(76, 175, 80, 0.4);
+        }
+        
+        .step.completed {
+            background: linear-gradient(135deg, #ff9800 0%, #ffb74d 100%);
+            color: white;
+        }
+        
+        .alert {
+            margin-bottom: 20px;
+        }
+        
+        /* Tooltip for app password */
+        .tooltip-container {
+            position: relative;
+            display: inline-block;
+        }
+        
+        .tooltip {
+            position: absolute;
+            top: -5px;
+            left: 100%;
+            margin-left: 10px;
+            background: rgba(0, 0, 0, 0.9);
+            color: white;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 11px;
+            white-space: nowrap;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            z-index: 1000;
+        }
+        
+        .tooltip::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: -5px;
+            transform: translateY(-50%);
+            border: 5px solid transparent;
+            border-right-color: rgba(0, 0, 0, 0.9);
+        }
+        
+        .tooltip-container:hover .tooltip {
+            opacity: 1;
+            visibility: visible;
+        }
+    </style>
+</head>
+<body>
+    <div class="auth-container">
+        <div class="auth-card">
+            <div class="auth-header">
+                <div class="logo">
+                    <i class="fas fa-user-plus"></i>
+                </div>
+                <h2>Join EcoZen</h2>
+                <p>Create your smart finance account</p>
+            </div>
+            
+            <div class="progress-steps">
+                <div class="step active">1</div>
+                <div class="step">2</div>
+                <div class="step">3</div>
+            </div>
+            
+            <form method="post" id="signupForm">
+                {% csrf_token %}
+                
+                <div class="form-group">
+                    <i class="fa fa-user"></i>
+                    <input type="text" 
+                           class="form-control with-icon" 
+                           id="user_name" 
+                           name="user_name" 
+                           placeholder="Enter your full name"
+                           required>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <i class="fa fa-phone"></i>
+                        <input type="text" 
+                               class="form-control with-icon" 
+                               id="phone_number" 
+                               name="phone_number" 
+                               placeholder="Phone number"
+                               pattern="\d{10}"
+                               title="Please enter a 10-digit phone number"
+                               required>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <i class="fa fa-envelope"></i>
+                    <input type="email" 
+                           class="form-control with-icon" 
+                           id="gmail" 
+                           name="gmail" 
+                           placeholder="Enter your email address"
+                           required>
+                </div>
+                
+                <div class="form-group">
+                    <input type="password" 
+                           class="form-control with-icon" 
+                           id="login_password" 
+                           name="login_password" 
+                           placeholder="Create a password"
+                           required>
+                    <div class="password-requirements">
+                        <p>Password must contain:</p>
+                        <ul>
+                            <li id="length" class="invalid">At least 8 characters</li>
+                            <li id="uppercase" class="invalid">One uppercase letter</li>
+                            <li id="lowercase" class="invalid">One lowercase letter</li>
+                            <li id="number" class="invalid">One number</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="form-group tooltip-container">
+                    <i class="fa fa-key"></i>
+                    <input type="password" 
+                           class="form-control with-icon" 
+                           id="app_password" 
+                           name="app_password" 
+                           placeholder="Gmail app password"
+                           required>
+                    <div class="tooltip">
+                        This is your Gmail app-specific password for secure email integration
+                    </div>
+                </div>
+                
+                <div class="terms-checkbox">
+                    <input type="checkbox" id="terms" required>
+                    <label for="terms">
+                        I agree to the <a href="#" onclick="alert('Terms of Service coming soon!')">Terms of Service</a> 
+                        and <a href="#" onclick="alert('Privacy Policy coming soon!')">Privacy Policy</a>
+                    </label>
+                </div>
+                
+                <button type="submit" class="btn btn-primary btn-signup">
+                    <i class="fas fa-user-plus" style="margin-right: 8px;"></i>
+                    Create Account
+                </button>
+            </form>
+            
+            <div class="auth-footer">
+                <p>Already have an account?</p>
+                <a href="/login/">Sign in instead →</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Password validation
+        const passwordInput = document.getElementById('login_password');
+        const requirements = {
+            length: document.getElementById('length'),
+            uppercase: document.getElementById('uppercase'),
+            lowercase: document.getElementById('lowercase'),
+            number: document.getElementById('number')
+        };
+        
+        passwordInput.addEventListener('input', function() {
+            const value = this.value;
+            
+            // Check length
+            if (value.length >= 8) {
+                requirements.length.classList.remove('invalid');
+                requirements.length.classList.add('valid');
+            } else {
+                requirements.length.classList.remove('valid');
+                requirements.length.classList.add('invalid');
+            }
+            
+            // Check uppercase
+            if (/[A-Z]/.test(value)) {
+                requirements.uppercase.classList.remove('invalid');
+                requirements.uppercase.classList.add('valid');
+            } else {
+                requirements.uppercase.classList.remove('valid');
+                requirements.uppercase.classList.add('invalid');
+            }
+            
+            // Check lowercase
+            if (/[a-z]/.test(value)) {
+                requirements.lowercase.classList.remove('invalid');
+                requirements.lowercase.classList.add('valid');
+            } else {
+                requirements.lowercase.classList.remove('valid');
+                requirements.lowercase.classList.add('invalid');
+            }
+            
+            // Check number
+            if (/[0-9]/.test(value)) {
+                requirements.number.classList.remove('invalid');
+                requirements.number.classList.add('valid');
+            } else {
+                requirements.number.classList.remove('valid');
+                requirements.number.classList.add('invalid');
+            }
+        });
+        
+        // Form submission
+        document.getElementById('signupForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            
+            // Show loading state
+            const submitBtn = this.querySelector('button[type="submit"]');
+            const originalText = submitBtn.innerHTML;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin" style="margin-right: 8px;"></i>Creating Account...';
+            submitBtn.disabled = true;
+            
+            // Update progress steps
+            const steps = document.querySelectorAll('.step');
+            steps[0].classList.add('completed');
+            steps[1].classList.add('active');
+            
+            setTimeout(() => {
+                steps[1].classList.add('completed');
+                steps[2].classList.add('active');
+                
+                setTimeout(() => {
+                    var formData = new FormData(this);
+                    fetch('/signup/', {
+                        method: 'POST',
+                        body: formData,
+                        headers: {
+                            'X-CSRFToken': '{{ csrf_token }}'
+                        }
+                    })
+                    .then(response => {
+                        if (response.ok) {
+                            // Success
+                            submitBtn.innerHTML = '<i class="fas fa-check" style="margin-right: 8px;"></i>Account Created!';
+                            submitBtn.style.background = 'linear-gradient(135deg, #4caf50 0%, #66bb6a 100%)';
+                            
+                            setTimeout(() => {
+                                window.location.href = '/login/';
+                            }, 1500);
+                        } else {
+                            throw new Error('Failed to create account');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        
+                        // Show error
+                        let errorDiv = document.querySelector('.alert-danger');
+                        if (!errorDiv) {
+                            errorDiv = document.createElement('div');
+                            errorDiv.className = 'alert alert-danger';
+                            document.querySelector('form').insertBefore(errorDiv, document.querySelector('.form-group'));
+                        }
+                        errorDiv.innerHTML = '<i class="fas fa-exclamation-triangle" style="margin-right: 8px;"></i>Failed to create account. Please check your information and try again.';
+                        
+                        // Reset button and steps
+                        submitBtn.innerHTML = originalText;
+                        submitBtn.disabled = false;
+                        submitBtn.style.background = '';
+                        
+                        steps.forEach((step, index) => {
+                            step.classList.remove('active', 'completed');
+                            if (index === 0) step.classList.add('active');
+                        });
+                    });
+                }, 1000);
+            }, 500);
+        });
+        
+        // Add input focus animations
+        document.querySelectorAll('.form-control').forEach(input => {
+            input.addEventListener('focus', function() {
+                this.parentElement.querySelector('.fa').style.color = '#ff9800';
+            });
+            
+            input.addEventListener('blur', function() {
+                this.parentElement.querySelector('.fa').style.color = '#4caf50';
+            });
+        });
+        
+        // Phone number validation
+        document.getElementById('phone_number').addEventListener('input', function() {
+            this.value = this.value.replace(/[^0-9]/g, '').substring(0, 10);
+        });
+    </script>
+</body>
+</html>

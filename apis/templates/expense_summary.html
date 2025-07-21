@@ -1,0 +1,453 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EcoZen - Expense Summary</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'finovate-theme.css' %}">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.0/chart.min.js"></script>
+    <style>
+        body {
+            background: linear-gradient(135deg, #0f1c4d 0%, #1e2a42 100%);
+            min-height: 100vh;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .page-header {
+            background: linear-gradient(135deg, rgba(15,28,77,0.9), rgba(30,42,66,0.9));
+            border-radius: 20px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            border: 2px solid rgba(76, 175, 80, 0.3);
+            backdrop-filter: blur(20px);
+            box-shadow: 
+                0 20px 40px rgba(0, 0, 0, 0.4),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+        }
+
+        .page-header h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #FFA500;
+            margin-bottom: 0.5rem;
+            text-shadow: 0 3px 15px rgba(255, 165, 0, 0.3);
+        }
+
+        .page-header p {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 1.1rem;
+            margin: 0;
+        }
+
+        .stat-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, rgba(15, 28, 77, 0.9), rgba(30, 42, 66, 0.9));
+            border-radius: 16px;
+            padding: 2rem;
+            border: 2px solid rgba(76, 175, 80, 0.3);
+            backdrop-filter: blur(20px);
+            box-shadow: 
+                0 10px 30px rgba(0, 0, 0, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 
+                0 20px 40px rgba(0, 0, 0, 0.4),
+                0 0 30px rgba(76, 175, 80, 0.3);
+            border-color: #4caf50;
+        }
+
+        .stat-card .icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #4caf50 0%, #66bb6a 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+            font-size: 24px;
+            color: white;
+            box-shadow: 0 8px 25px rgba(76, 175, 80, 0.4);
+        }
+
+        .stat-card .number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 0.5rem;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .stat-card .label {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 1rem;
+            font-weight: 500;
+        }
+
+        .chart-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .chart-card {
+            background: linear-gradient(135deg, rgba(15, 28, 77, 0.9), rgba(30, 42, 66, 0.9));
+            border-radius: 20px;
+            border: 2px solid rgba(76, 175, 80, 0.3);
+            backdrop-filter: blur(20px);
+            box-shadow: 
+                0 20px 40px rgba(0, 0, 0, 0.4),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .chart-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 
+                0 30px 50px rgba(0, 0, 0, 0.5),
+                0 0 30px rgba(76, 175, 80, 0.3);
+            border-color: #4caf50;
+        }
+
+        .chart-header {
+            background: linear-gradient(135deg, rgba(76, 175, 80, 0.2), rgba(102, 187, 106, 0.2));
+            padding: 1.5rem 2rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .chart-header h3 {
+            color: #fff;
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .chart-header i {
+            color: #4caf50;
+        }
+
+        .chart-body {
+            padding: 2rem;
+        }
+
+        .chart-container {
+            position: relative;
+            height: 350px;
+            width: 100%;
+        }
+
+        .back-button {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background: linear-gradient(135deg, #4caf50 0%, #66bb6a 100%);
+            color: white;
+            text-decoration: none;
+            padding: 12px 20px;
+            border-radius: 12px;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 8px 25px rgba(76, 175, 80, 0.4);
+            transition: all 0.3s ease;
+            font-weight: 600;
+            z-index: 1000;
+        }
+
+        .back-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 30px rgba(76, 175, 80, 0.5);
+            text-decoration: none;
+            color: white;
+        }
+
+        /* Chart styling */
+        canvas {
+            background: transparent !important;
+        }
+
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+            
+            .page-header {
+                padding: 1.5rem;
+            }
+            
+            .page-header h1 {
+                font-size: 2rem;
+            }
+            
+            .stat-cards {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+            
+            .chart-grid {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+            
+            .chart-container {
+                height: 300px;
+            }
+            
+            .back-button {
+                position: relative;
+                top: auto;
+                left: auto;
+                margin-bottom: 1rem;
+                display: inline-block;
+            }
+        }
+
+        /* Enhanced animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .stat-card, .chart-card {
+            animation: fadeInUp 0.6s ease forwards;
+        }
+
+        .stat-card:nth-child(2) {
+            animation-delay: 0.1s;
+        }
+
+        .stat-card:nth-child(3) {
+            animation-delay: 0.2s;
+        }
+
+        .chart-card:nth-child(1) {
+            animation-delay: 0.3s;
+        }
+
+        .chart-card:nth-child(2) {
+            animation-delay: 0.4s;
+        }
+    </style>
+</head>
+<body>
+    <a href="/" class="back-button">
+        <i class="fas fa-arrow-left" style="margin-right: 8px;"></i>
+        Back to Dashboard
+    </a>
+
+    <div class="container">
+        <header class="page-header">
+            <h1><i class="fas fa-chart-pie" style="margin-right: 15px;"></i>Expense Summary</h1>
+            <p><i class="fas fa-clock" style="margin-right: 8px;"></i>Last Updated: {{ user_status.last_updated }}</p>
+        </header>
+
+        <div class="stat-cards">
+            <div class="stat-card">
+                <div class="icon"><i class="fas fa-dollar-sign"></i></div>
+                <div class="number">${{ total }}</div>
+                <div class="label">Total Expenses</div>
+            </div>
+            <div class="stat-card">
+                <div class="icon"><i class="fas fa-wallet"></i></div>
+                <div class="number">${{ user_status.currentbalance }}</div>
+                <div class="label">Current Balance</div>
+            </div>
+            <div class="stat-card">
+                <div class="icon"><i class="fas fa-star"></i></div>
+                <div class="number">{{ user_status.score }}%</div>
+                <div class="label">Financial Score</div>
+            </div>
+        </div>
+
+        <div class="chart-grid">
+            <div class="chart-card">
+                <div class="chart-header">
+                    <h3><i class="fas fa-chart-pie"></i>Spending by Category</h3>
+                </div>
+                <div class="chart-body">
+                    <div class="chart-container">
+                        <canvas id="pieChart"></canvas>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="chart-card">
+                <div class="chart-header">
+                    <h3><i class="fas fa-chart-line"></i>Daily Spending Trend</h3>
+                </div>
+                <div class="chart-body">
+                    <div class="chart-container">
+                        <canvas id="lineChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Enhanced chart styling to match dark theme
+        Chart.defaults.color = '#ffffff';
+        Chart.defaults.backgroundColor = 'rgba(76, 175, 80, 0.1)';
+        Chart.defaults.borderColor = 'rgba(76, 175, 80, 0.3)';
+
+        var ctx = document.getElementById('pieChart').getContext('2d');
+        var pieChart = new Chart(ctx, {
+            type: 'pie',
+            data: {
+                labels: [
+                    {% for category, percentage in category_percentages.items %}
+                        "{{ category }}",
+                    {% endfor %}
+                ],
+                datasets: [{
+                    label: 'Percentage Spending',
+                    data: [
+                        {% for category, percentage in category_percentages.items %}
+                            {{ percentage }},
+                        {% endfor %}
+                    ],
+                    backgroundColor: [
+                        'rgba(76, 175, 80, 0.8)',   // Green
+                        'rgba(255, 152, 0, 0.8)',   // Orange
+                        'rgba(33, 150, 243, 0.8)',  // Blue
+                        'rgba(156, 39, 176, 0.8)',  // Purple
+                        'rgba(255, 193, 7, 0.8)',   // Amber
+                        'rgba(244, 67, 54, 0.8)',   // Red
+                        'rgba(0, 188, 212, 0.8)',   // Cyan
+                        'rgba(139, 195, 74, 0.8)',  // Light Green
+                    ],
+                    borderColor: [
+                        'rgba(76, 175, 80, 1)',
+                        'rgba(255, 152, 0, 1)',
+                        'rgba(33, 150, 243, 1)',
+                        'rgba(156, 39, 176, 1)',
+                        'rgba(255, 193, 7, 1)',
+                        'rgba(244, 67, 54, 1)',
+                        'rgba(0, 188, 212, 1)',
+                        'rgba(139, 195, 74, 1)',
+                    ],
+                    borderWidth: 2
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            color: '#ffffff',
+                            font: {
+                                family: 'Poppins',
+                                size: 12
+                            },
+                            padding: 20,
+                            usePointStyle: true
+                        }
+                    },
+                    title: {
+                        display: false
+                    }
+                }
+            }
+        });
+
+        var ctxLine = document.getElementById('lineChart').getContext('2d');
+        var lineChart = new Chart(ctxLine, {
+            type: 'line',
+            data: {
+                labels: [
+                    {% for data in daily_spending_data %}
+                        "{{ data.date|date:'M d' }}",
+                    {% endfor %}
+                ],
+                datasets: [{
+                    label: 'Daily Spending',
+                    data: [
+                        {% for data in daily_spending_data %}
+                            {{ data.total }},
+                        {% endfor %}
+                    ],
+                    fill: true,
+                    backgroundColor: 'rgba(76, 175, 80, 0.1)',
+                    borderColor: 'rgba(76, 175, 80, 1)',
+                    borderWidth: 3,
+                    tension: 0.4,
+                    pointBackgroundColor: 'rgba(76, 175, 80, 1)',
+                    pointBorderColor: '#ffffff',
+                    pointBorderWidth: 2,
+                    pointRadius: 6,
+                    pointHoverRadius: 8
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                },
+                scales: {
+                    x: {
+                        ticks: {
+                            color: '#ffffff',
+                            font: {
+                                family: 'Poppins'
+                            }
+                        },
+                        grid: {
+                            color: 'rgba(255, 255, 255, 0.1)'
+                        }
+                    },
+                    y: {
+                        ticks: {
+                            color: '#ffffff',
+                            font: {
+                                family: 'Poppins'
+                            },
+                            callback: function(value) {
+                                return '$' + value;
+                            }
+                        },
+                        grid: {
+                            color: 'rgba(255, 255, 255, 0.1)'
+                        }
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>

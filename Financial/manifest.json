@@ -1,0 +1,61 @@
+{
+  "manifest_version": 3,
+  "name": "Finance App",
+  "version": "1.0.0",
+  "description": "Finance",
+  "action": {
+    "default_popup": "/html/popup.html"
+  },
+  "content_scripts": [
+    {
+        "matches": [
+            "*://*.amazon.com/*", 
+            "*://*.amazon.in/*", 
+            "*://*.flipkart.com/*", 
+            "*://*.myntra.com/*", 
+            "*://*.zomato.com/*", 
+            "*://*.swiggy.com/*", 
+            "*://*.meesho.com/*"
+        ],
+        "js": ["inject.js", "content.js"],
+        "runAt": "document_end"
+    }
+  ],
+  "permissions": [
+    "sidePanel", 
+    "contextMenus",
+    "tabs",
+    "webNavigation",
+    "activeTab",
+    "storage",
+    "scripting"
+  ],
+  "background": {
+    "service_worker": "serviceWorker.js"
+  },
+  "web_accessible_resources": [
+    {
+      "resources": [
+        "scripts/popup.js", 
+        "css/styles.css", 
+        "js/script.js",
+        "js/size_helper.js", 
+        "js/eco_score.js",
+        "html/popup.html",
+        "inject.js",
+        "content.js",
+        "apis/static/finovate-theme.css",
+        "apis/templates/index.html",
+        "apis/templates/popup.html",
+        "apis/templates/comparison.html",
+        "apis/templates/size_analysis.html"
+      ],
+      "matches": ["*://*/*"]
+    }
+  ],
+  "host_permissions": [
+    "<all_urls>",
+    "http://127.0.0.1:8000/*",
+    "https://generativelanguage.googleapis.com/*"
+  ]
+}

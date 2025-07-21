@@ -1,0 +1,304 @@
+<!-- templates/login.html -->
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EcoZen - User Login</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'finovate-theme.css' %}">
+    <style>
+        .auth-container {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        .auth-card {
+            width: 100%;
+            max-width: 450px;
+            background: linear-gradient(135deg, 
+                rgba(15, 28, 77, 0.9) 0%, 
+                rgba(30, 42, 66, 0.9) 100%);
+            border-radius: 20px;
+            padding: 40px;
+            backdrop-filter: blur(20px);
+            border: 2px solid rgba(76, 175, 80, 0.3);
+            box-shadow: 
+                0 20px 40px rgba(0, 0, 0, 0.4),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+        }
+        
+        .auth-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .auth-header h2 {
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: #FFA500;
+            margin-bottom: 8px;
+            text-shadow: 0 3px 15px rgba(255, 165, 0, 0.3);
+        }
+        
+        .auth-header p {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 15px;
+            font-weight: 500;
+        }
+        
+        .logo {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #4caf50 0%, #66bb6a 100%);
+            border-radius: 50%;
+            margin: 0 auto 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            color: white;
+            box-shadow: 0 8px 25px rgba(76, 175, 80, 0.4);
+        }
+        
+        .form-group {
+            position: relative;
+            margin-bottom: 25px;
+        }
+        
+        .form-group .fa {
+            position: absolute;
+            left: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #4caf50;
+            font-size: 16px;
+            z-index: 1;
+        }
+        
+        .form-control.with-icon {
+            padding-left: 50px;
+            color: #fff;
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(76, 175, 80, 0.3);
+            border-radius: 12px;
+            padding: 16px 20px 16px 50px;
+            font-size: 15px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        
+        .forgot-password {
+            text-align: right;
+            margin-bottom: 25px;
+        }
+        
+        .forgot-password a {
+            color: #ff9800;
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+        
+        .forgot-password a:hover {
+            color: #ffb74d;
+            text-decoration: underline;
+        }
+        
+        .auth-footer {
+            text-align: center;
+            margin-top: 30px;
+            padding-top: 25px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .auth-footer p {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 14px;
+            margin-bottom: 15px;
+        }
+        
+        .auth-footer a {
+            color: #4caf50;
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s ease;
+        }
+        
+        .auth-footer a:hover {
+            color: #66bb6a;
+            text-decoration: underline;
+        }
+        
+        .btn-login {
+            width: 100%;
+            margin: 0;
+            padding: 16px;
+            font-size: 16px;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+        
+        .social-login {
+            margin: 25px 0;
+            text-align: center;
+        }
+        
+        .social-login .or-divider {
+            position: relative;
+            margin: 20px 0;
+            text-align: center;
+        }
+        
+        .social-login .or-divider::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: rgba(255, 255, 255, 0.2);
+        }
+        
+        .social-login .or-divider span {
+            background: linear-gradient(135deg, 
+                rgba(15, 28, 77, 0.9) 0%, 
+                rgba(30, 42, 66, 0.9) 100%);
+            padding: 0 15px;
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 13px;
+            position: relative;
+        }
+        
+        .alert {
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="auth-container">
+        <div class="auth-card">
+            <div class="auth-header">
+                <div class="logo">
+                    <i class="fas fa-chart-line"></i>
+                </div>
+                <h2>Welcome Back</h2>
+                <p>Sign in to your EcoZen account</p>
+            </div>
+            
+            <form method="post" id="loginForm">
+                {% csrf_token %}
+                
+                <div class="form-group">
+                    <i class="fa fa-envelope"></i>
+                    <input type="email" 
+                           class="form-control with-icon" 
+                           id="gmail" 
+                           name="gmail" 
+                           placeholder="Enter your email address"
+                           required>
+                </div>
+                
+                <div class="form-group">
+                    <i class="fa fa-lock"></i>
+                    <input type="password" 
+                           class="form-control with-icon" 
+                           id="login_password" 
+                           name="login_password" 
+                           placeholder="Enter your password"
+                           required>
+                </div>
+                
+                <div class="forgot-password">
+                    <a href="#" onclick="alert('Password reset feature coming soon!')">Forgot password?</a>
+                </div>
+                
+                <button type="submit" class="btn btn-primary btn-login">
+                    <i class="fas fa-sign-in-alt" style="margin-right: 8px;"></i>
+                    Sign In
+                </button>
+                
+                <div class="social-login">
+                    <div class="or-divider">
+                        <span>or continue with</span>
+                    </div>
+                </div>
+            </form>
+            
+            <div class="auth-footer">
+                <p>Don't have an account?</p>
+                <a href="/signup/">Create your account →</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('loginForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            
+            // Show loading state
+            const submitBtn = this.querySelector('button[type="submit"]');
+            const originalText = submitBtn.innerHTML;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin" style="margin-right: 8px;"></i>Signing In...';
+            submitBtn.disabled = true;
+            
+            var formData = new FormData(this);
+            fetch('/login/', {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-CSRFToken': '{{ csrf_token }}'
+                }
+            })
+            .then(response => {
+                if (response.ok) {
+                    // Success
+                    submitBtn.innerHTML = '<i class="fas fa-check" style="margin-right: 8px;"></i>Success!';
+                    submitBtn.style.background = 'linear-gradient(135deg, #4caf50 0%, #66bb6a 100%)';
+                    
+                    setTimeout(() => {
+                        window.location.href = '/'; // Redirect to home page
+                    }, 1000);
+                } else {
+                    throw new Error('Invalid credentials');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                
+                // Show error
+                let errorDiv = document.querySelector('.alert-danger');
+                if (!errorDiv) {
+                    errorDiv = document.createElement('div');
+                    errorDiv.className = 'alert alert-danger';
+                    document.querySelector('form').insertBefore(errorDiv, document.querySelector('.form-group'));
+                }
+                errorDiv.innerHTML = '<i class="fas fa-exclamation-triangle" style="margin-right: 8px;"></i>Invalid email or password. Please try again.';
+                
+                // Reset button
+                submitBtn.innerHTML = originalText;
+                submitBtn.disabled = false;
+                submitBtn.style.background = '';
+            });
+        });
+        
+        // Add input focus animations
+        document.querySelectorAll('.form-control').forEach(input => {
+            input.addEventListener('focus', function() {
+                this.parentElement.querySelector('.fa').style.color = '#ff9800';
+            });
+            
+            input.addEventListener('blur', function() {
+                this.parentElement.querySelector('.fa').style.color = '#4caf50';
+            });
+        });
+    </script>
+</body>
+</html>
+

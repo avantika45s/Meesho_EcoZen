@@ -1,0 +1,493 @@
+/* * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+}
+
+.container {
+    width: 400px;
+    max-height: 600px;
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    overflow: hidden;
+}
+
+.header {
+    background: linear-gradient(135deg, #4CAF50, #45a049);
+    color: white;
+    padding: 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.eco-icon {
+    font-size: 24px;
+}
+
+.header h1 {
+    font-size: 20px;
+    font-weight: 600;
+}
+
+.settings-btn {
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 4px;
+    transition: background-color 0.3s;
+}
+
+.settings-btn:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.settings-panel {
+    background: #f5f5f5;
+    padding: 16px;
+    border-bottom: 1px solid #e0e0e0;
+    display: none;
+}
+
+.settings-panel.active {
+    display: block;
+}
+
+.setting-item {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.setting-item label {
+    min-width: 100px;
+    font-weight: 500;
+}
+
+.setting-item input {
+    flex: 1;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+.setting-item button {
+    padding: 8px 16px;
+    background: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.setting-item button:hover {
+    background: #45a049;
+}
+
+.setting-note {
+    font-size: 12px;
+    color: #666;
+    margin-top: 8px;
+}
+
+.setting-note a {
+    color: #4CAF50;
+    text-decoration: none;
+}
+
+.main-content {
+    padding: 20px;
+    max-height: 500px;
+    overflow-y: auto;
+}
+
+.loading {
+    text-align: center;
+    padding: 40px 20px;
+}
+
+.spinner {
+    width: 40px;
+    height: 40px;
+    border: 4px solid #f3f3f3;
+    border-top: 4px solid #4CAF50;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin: 0 auto 16px;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.no-product {
+    text-align: center;
+    padding: 40px 20px;
+    color: #666;
+}
+
+.no-product .icon {
+    font-size: 48px;
+    margin-bottom: 16px;
+}
+
+.no-product h3 {
+    margin-bottom: 8px;
+    color: #333;
+}
+
+.product-info {
+    margin-bottom: 20px;
+}
+
+.product-info h3 {
+    color: #333;
+    margin-bottom: 8px;
+    font-size: 16px;
+    line-height: 1.3;
+}
+
+.platform-badge {
+    background: #e3f2fd;
+    color: #1976d2;
+    padding: 4px 8px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 500;
+    display: inline-block;
+}
+
+.sustainability-score {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+    margin-bottom: 20px;
+    padding: 16px;
+    background: #f8f9ff;
+    border-radius: 8px;
+}
+
+.score-circle {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    position: relative;
+    background: conic-gradient(#4CAF50 0deg, #4CAF50 0deg, #e0e0e0 0deg);
+}
+
+.score-value {
+    font-size: 20px;
+    color: #333;
+}
+
+.score-max {
+    font-size: 12px;
+    color: #666;
+}
+
+.score-info h4 {
+    color: #333;
+    margin-bottom: 4px;
+}
+
+.score-info p {
+    color: #666;
+    font-size: 14px;
+}
+
+.emissions-info {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 20px;
+}
+
+.emission-item {
+    flex: 1;
+    padding: 12px;
+    background: #f5f5f5;
+    border-radius: 6px;
+    text-align: center;
+}
+
+.emission-item .label {
+    display: block;
+    font-size: 12px;
+    color: #666;
+    margin-bottom: 4px;
+}
+
+.emission-item .value {
+    font-weight: 600;
+    color: #333;
+}
+
+.insights {
+    margin-bottom: 20px;
+}
+
+.insights h4 {
+    color: #333;
+    margin-bottom: 8px;
+}
+
+.insights ul {
+    list-style: none;
+    padding: 0;
+}
+
+.insights li {
+    padding: 8px 0;
+    border-bottom: 1px solid #eee;
+    font-size: 14px;
+    color: #555;
+}
+
+.insights li:last-child {
+    border-bottom: none;
+}
+
+.alternatives h4 {
+    color: #333;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.alternative-item {
+    background: #f8f9ff;
+    border: 1px solid #e3f2fd;
+    border-radius: 8px;
+    padding: 12px;
+    margin-bottom: 12px;
+    transition: transform 0.2s;
+}
+
+.alternative-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.alternative-title {
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 4px;
+    font-size: 14px;
+}
+
+.alternative-price {
+    color: #4CAF50;
+    font-weight: 600;
+    margin-bottom: 4px;
+}
+
+.alternative-co2 {
+    font-size: 12px;
+    color: #666;
+    margin-bottom: 8px;
+}
+
+.alternative-link {
+    display: inline-block;
+    background: #4CAF50;
+    color: white;
+    padding: 6px 12px;
+    border-radius: 4px;
+    text-decoration: none;
+    font-size: 12px;
+    transition: background-color 0.3s;
+}
+
+.alternative-link:hover {
+    background: #45a049;
+}
+
+.error-state {
+    text-align: center;
+    padding: 40px 20px;
+    color: #666;
+}
+
+.error-state .icon {
+    font-size: 48px;
+    margin-bottom: 16px;
+}
+
+.error-state h3 {
+    margin-bottom: 8px;
+    color: #333;
+}
+
+.error-state button {
+    background: #4CAF50;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-top: 16px;
+}
+
+.error-state button:hover {
+    background: #45a049;
+}
+
+.hidden {
+    display: none !important;
+}
+
+/* Scrollbar styling */
+/* .main-content::-webkit-scrollbar {
+    width: 6px;
+}
+
+.main-content::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+.main-content::-webkit-scrollbar-thumb {
+    background: #c1c1c1;
+    border-radius: 3px;
+}
+
+.main-content::-webkit-scrollbar-thumb:hover {
+    background: #a8a8a8;
+} */
+ */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+body {
+            margin: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #e6f5ea, #cfe9d8);
+            color: #2e7d32;
+        }
+
+        .container {
+            max-width: 400px;
+            margin: auto;
+            padding: 1rem;
+            background-color: #ffffff;
+            border-radius: 16px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+        }
+
+        .logo h1 {
+            margin: 0 0 0 10px;
+            font-size: 1.8rem;
+            color: #388e3c;
+        }
+
+        .eco-icon {
+            font-size: 2rem;
+        }
+
+        .settings-btn {
+            cursor: pointer;
+            font-size: 1.5rem;
+        }
+
+        .score-circle {
+            background-color: #a5d6a7;
+            border-radius: 50%;
+            width: 80px;
+            height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: auto;
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #1b5e20;
+        }
+
+        .sustainability-score h4 {
+            text-align: center;
+            margin-top: 10px;
+        }
+
+        .alternatives h4,
+        .insights h4 {
+            margin-top: 1.5rem;
+            color: #2e7d32;
+        }
+
+        .loading .spinner {
+            width: 30px;
+            height: 30px;
+            border: 3px solid #c8e6c9;
+            border-top: 3px solid #2e7d32;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: auto;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .error-state {
+            color: #c62828;
+        }
+
+        button#retryBtn {
+            background-color: #81c784;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            color: white;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        button#retryBtn:hover {
+            background-color: #66bb6a;
+        }

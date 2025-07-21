@@ -1,0 +1,12 @@
+cryptography
+google-generativeai
+djangorestframework
+django_celery_beat
+pymysql
+django
+transformers
+jwt
+sklearn
+bs4
+pandas
+lxml

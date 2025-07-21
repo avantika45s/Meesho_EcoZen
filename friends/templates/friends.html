@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Friends Group</title>
+    <style>
+        /* Basic CSS styles */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .group-list {
+            list-style: none;
+            padding: 0;
+        }
+        .group-list li {
+            margin-bottom: 10px;
+        }
+        .button {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: #fff;
+            text-decoration: none;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Create a Group</h2>
+        <form action="{% url 'create_group' %}" method="post">
+            {% csrf_token %}
+            <label for="group_name">Group Name:</label>
+            <input type="text" id="group_name" name="group_name">
+            <button type="submit" class="button">Create</button>
+        </form>
+
+        <h2>Your Groups</h2>
+        <ul class="group-list">
+            {% for group in user_groups %}
+                <li>{{ group.name }} - {{ group.joining_code }}</li>
+            {% endfor %}
+        </ul>
+
+        <h2>Group Leaderboard</h2>
+        <ul class="group-list">
+            {% for member in group_members %}
+                <li>{{ member.user_name }} - Score: {{ member.score }}</li>
+            {% endfor %}
+        </ul>
+
+        <h2>Remove Member</h2>
+        <form action="{% url 'remove_member' group_id member_id %}" method="post">
+            {% csrf_token %}
+            <button type="submit" class="button">Remove Member</button>
+        </form>
+
+        <h2>Change Group Name</h2>
+        <form action="{% url 'change_group_name' group_id %}" method="post">
+            {% csrf_token %}
+            <label for="new_group_name">New Group Name:</label>
+            <input type="text" id="new_group_name" name="new_group_name">
+            <button type="submit" class="button">Change</button>
+        </form>
+    </div>
+</body>
+</html>

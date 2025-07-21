@@ -1,0 +1,409 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EcoZen - Mail Expenses</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'finovate-theme.css' %}">
+    <style>
+        .page-header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 40px 0;
+            background: linear-gradient(135deg, 
+                rgba(15, 28, 77, 0.8) 0%, 
+                rgba(30, 42, 66, 0.8) 100%);
+            border-radius: 16px;
+            backdrop-filter: blur(15px);
+            border: 2px solid rgba(76, 175, 80, 0.3);
+        }
+        
+        .page-header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+            color: #FFA500;
+        }
+        
+        .page-header p {
+            font-size: 1.1rem;
+            color: rgba(255, 255, 255, 0.8);
+            margin: 0;
+        }
+        
+        .search-form {
+            background: linear-gradient(135deg, 
+                rgba(15, 28, 77, 0.8) 0%, 
+                rgba(30, 42, 66, 0.8) 100%);
+            padding: 30px;
+            border-radius: 16px;
+            margin-bottom: 30px;
+            backdrop-filter: blur(15px);
+            border: 2px solid rgba(76, 175, 80, 0.3);
+        }
+        
+        .search-form h3 {
+            color: #4caf50;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .search-form .form-group {
+            max-width: 400px;
+            margin: 0 auto 20px auto;
+        }
+        
+        .search-form .btn {
+            display: block;
+            margin: 0 auto;
+            min-width: 200px;
+        }
+        
+        .results-section {
+            margin-top: 30px;
+        }
+        
+        .loading-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: rgba(255, 255, 255, 0.7);
+            display: none;
+        }
+        
+        .loading-state .spinner {
+            margin: 0 auto 20px;
+        }
+        
+        .error-message {
+            background: linear-gradient(135deg, 
+                rgba(244, 67, 54, 0.2) 0%, 
+                rgba(255, 107, 107, 0.2) 100%);
+            border: 1px solid rgba(244, 67, 54, 0.4);
+            color: #ff6b6b;
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+            margin: 20px 0;
+            display: none;
+        }
+        
+        .success-message {
+            background: linear-gradient(135deg, 
+                rgba(76, 175, 80, 0.2) 0%, 
+                rgba(102, 187, 106, 0.2) 100%);
+            border: 1px solid rgba(76, 175, 80, 0.4);
+            color: #81c784;
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+            margin: 20px 0;
+            display: none;
+        }
+        
+        .back-button {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background: linear-gradient(135deg, #4caf50 0%, #66bb6a 100%);
+            color: white;
+            padding: 12px 16px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(76, 175, 80, 0.4);
+            z-index: 1000;
+        }
+        
+        .back-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(76, 175, 80, 0.5);
+            color: white;
+            text-decoration: none;
+        }
+        
+        .stats-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .stat-card {
+            background: linear-gradient(135deg, 
+                rgba(15, 28, 77, 0.8) 0%, 
+                rgba(30, 42, 66, 0.8) 100%);
+            padding: 25px;
+            border-radius: 16px;
+            text-align: center;
+            backdrop-filter: blur(15px);
+            border: 2px solid rgba(76, 175, 80, 0.3);
+            transition: transform 0.3s ease;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .stat-card .icon {
+            font-size: 2.5rem;
+            color: #ff9800;
+            margin-bottom: 15px;
+        }
+        
+        .stat-card .number {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #4caf50;
+            margin-bottom: 8px;
+        }
+        
+        .stat-card .label {
+            color: rgba(255, 255, 255, 0.8);
+            font-weight: 500;
+        }
+        
+        .table-responsive {
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+        }
+        
+        .expense-status {
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        
+        .expense-status.delivered {
+            background: linear-gradient(135deg, #4caf50 0%, #66bb6a 100%);
+            color: white;
+        }
+        
+        .expense-status.pending {
+            background: linear-gradient(135deg, #ff9800 0%, #ffb74d 100%);
+            color: white;
+        }
+        
+        .expense-status.cancelled {
+            background: linear-gradient(135deg, #f44336 0%, #ff6b6b 100%);
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <a href="/" class="back-button">
+        <i class="fas fa-arrow-left" style="margin-right: 8px;"></i>
+        Back to Dashboard
+    </a>
+
+    <div class="container">
+        <div class="page-header">
+            <h1><i class="fas fa-envelope" style="margin-right: 15px;"></i>Mail Expenses</h1>
+            <p>Track and analyze expenses from your email orders</p>
+        </div>
+
+        <div class="search-form">
+            <h3><i class="fas fa-search" style="margin-right: 10px;"></i>Search Mail Expenses</h3>
+            <form id="expenseForm">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="userId"><i class="fas fa-user" style="margin-right: 8px;"></i>User ID</label>
+                    <input type="text" 
+                           class="form-control" 
+                           id="userId" 
+                           name="userId" 
+                           placeholder="Enter your User ID"
+                           required>
+                </div>
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-search" style="margin-right: 8px;"></i>
+                    Search Expenses
+                </button>
+            </form>
+        </div>
+
+        <div class="loading-state" id="loadingState">
+            <div class="spinner"></div>
+            <p>Searching your mail expenses...</p>
+        </div>
+
+        <div class="error-message" id="errorMessage">
+            <i class="fas fa-exclamation-triangle" style="margin-right: 8px;"></i>
+            <span id="errorText">An error occurred while searching expenses.</span>
+        </div>
+
+        <div class="success-message" id="successMessage">
+            <i class="fas fa-check-circle" style="margin-right: 8px;"></i>
+            <span id="successText">Expenses loaded successfully!</span>
+        </div>
+
+        <div class="results-section" id="resultsSection" style="display: none;">
+            <div class="stats-cards" id="statsCards">
+                <div class="stat-card">
+                    <div class="icon"><i class="fas fa-shopping-cart"></i></div>
+                    <div class="number" id="totalExpenses">0</div>
+                    <div class="label">Total Expenses</div>
+                </div>
+                <div class="stat-card">
+                    <div class="icon"><i class="fas fa-rupee-sign"></i></div>
+                    <div class="number" id="totalAmount">₹0</div>
+                    <div class="label">Total Amount</div>
+                </div>
+                <div class="stat-card">
+                    <div class="icon"><i class="fas fa-calendar"></i></div>
+                    <div class="number" id="thisMonth">0</div>
+                    <div class="label">This Month</div>
+                </div>
+                <div class="stat-card">
+                    <div class="icon"><i class="fas fa-truck"></i></div>
+                    <div class="number" id="deliveredCount">0</div>
+                    <div class="label">Delivered</div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title"><i class="fas fa-list" style="margin-right: 10px;"></i>Expense Details</h3>
+                </div>
+                <div class="table-responsive">
+                    <table class="table" id="expenseTable">
+                        <thead>
+                            <tr>
+                                <th><i class="fas fa-calendar" style="margin-right: 5px;"></i>Date</th>
+                                <th><i class="fas fa-hashtag" style="margin-right: 5px;"></i>Order ID</th>
+                                <th><i class="fas fa-store" style="margin-right: 5px;"></i>Platform</th>
+                                <th><i class="fas fa-box" style="margin-right: 5px;"></i>Item</th>
+                                <th><i class="fas fa-tag" style="margin-right: 5px;"></i>Category</th>
+                                <th><i class="fas fa-rupee-sign" style="margin-right: 5px;"></i>Amount</th>
+                                <th><i class="fas fa-info-circle" style="margin-right: 5px;"></i>Status</th>
+                                <th><i class="fas fa-star" style="margin-right: 5px;"></i>Feedback</th>
+                            </tr>
+                        </thead>
+                        <tbody id="expenseBody">
+                            <!-- Mail expenses will be dynamically added here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="{% static 'mail_expenses.js' %}"></script>
+    <script>
+        document.getElementById('expenseForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const userId = document.getElementById('userId').value.trim();
+            if (!userId) {
+                showError('Please enter a valid User ID');
+                return;
+            }
+            
+            // Show loading state
+            showLoading();
+            hideMessages();
+            
+            // Simulate API call (replace with actual endpoint)
+            setTimeout(() => {
+                // For demo purposes, show some sample data
+                hideLoading();
+                showSuccess('Expenses loaded successfully!');
+                displaySampleData();
+                document.getElementById('resultsSection').style.display = 'block';
+            }, 2000);
+        });
+        
+        function showLoading() {
+            document.getElementById('loadingState').style.display = 'block';
+        }
+        
+        function hideLoading() {
+            document.getElementById('loadingState').style.display = 'none';
+        }
+        
+        function showError(message) {
+            document.getElementById('errorText').textContent = message;
+            document.getElementById('errorMessage').style.display = 'block';
+        }
+        
+        function showSuccess(message) {
+            document.getElementById('successText').textContent = message;
+            document.getElementById('successMessage').style.display = 'block';
+        }
+        
+        function hideMessages() {
+            document.getElementById('errorMessage').style.display = 'none';
+            document.getElementById('successMessage').style.display = 'none';
+        }
+        
+        function displaySampleData() {
+            // Update stats
+            document.getElementById('totalExpenses').textContent = '15';
+            document.getElementById('totalAmount').textContent = '₹25,430';
+            document.getElementById('thisMonth').textContent = '8';
+            document.getElementById('deliveredCount').textContent = '12';
+            
+            // Sample expense data
+            const sampleExpenses = [
+                {
+                    date: '2024-01-15',
+                    orderId: 'AMZ123456',
+                    platform: 'Amazon',
+                    item: 'Wireless Headphones',
+                    category: 'Electronics',
+                    amount: '₹2,499',
+                    status: 'delivered',
+                    feedback: '⭐⭐⭐⭐⭐'
+                },
+                {
+                    date: '2024-01-12',
+                    orderId: 'FLP789012',
+                    platform: 'Flipkart',
+                    item: 'Cotton T-Shirt',
+                    category: 'Clothes',
+                    amount: '₹899',
+                    status: 'delivered',
+                    feedback: '⭐⭐⭐⭐'
+                },
+                {
+                    date: '2024-01-10',
+                    orderId: 'MYN345678',
+                    platform: 'Myntra',
+                    item: 'Running Shoes',
+                    category: 'Clothes',
+                    amount: '₹3,999',
+                    status: 'pending',
+                    feedback: 'Not rated'
+                }
+            ];
+            
+            const tbody = document.getElementById('expenseBody');
+            tbody.innerHTML = sampleExpenses.map(expense => `
+                <tr>
+                    <td>${expense.date}</td>
+                    <td><strong>${expense.orderId}</strong></td>
+                    <td>${expense.platform}</td>
+                    <td>${expense.item}</td>
+                    <td>${expense.category}</td>
+                    <td><strong>${expense.amount}</strong></td>
+                    <td><span class="expense-status ${expense.status}">${expense.status}</span></td>
+                    <td>${expense.feedback}</td>
+                </tr>
+            `).join('');
+        }
+        
+        // Hide success message after 3 seconds
+        setTimeout(() => {
+            const successMsg = document.getElementById('successMessage');
+            if (successMsg.style.display === 'block') {
+                successMsg.style.display = 'none';
+            }
+        }, 3000);
+    </script>
+</body>
+</html>
